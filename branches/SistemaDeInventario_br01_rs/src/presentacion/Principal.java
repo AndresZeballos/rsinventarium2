@@ -360,6 +360,8 @@ public class Principal extends javax.swing.JFrame {
         jComboBox32 = new javax.swing.JComboBox();
         jComboBox33 = new javax.swing.JComboBox();
         jComboBox34 = new javax.swing.JComboBox();
+        jLabel107 = new javax.swing.JLabel();
+        jTextField56 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -663,7 +665,7 @@ public class Principal extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Código", "Descripción", "Talle", "Color", "Lugar" , "Stock"
+                "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar" , "Stock"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -680,6 +682,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel52.setText("Marca");
 
         jLabel53.setText("Tela");
+
+        jLabel107.setText("Precio");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -711,12 +715,14 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel51)
                             .addComponent(jLabel52)
-                            .addComponent(jLabel53))
+                            .addComponent(jLabel53)
+                            .addComponent(jLabel107))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jComboBox32, 0, 160, Short.MAX_VALUE)
                             .addComponent(jComboBox33, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox34, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jComboBox34, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField56))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -747,7 +753,9 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ConsultarStock_Consultar))
+                    .addComponent(ConsultarStock_Consultar)
+                    .addComponent(jLabel107)
+                    .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addContainerGap())
@@ -2710,9 +2718,10 @@ public class Principal extends javax.swing.JFrame {
                 this.jComboBox4.getSelectedItem().toString(),
                 this.jComboBox32.getSelectedItem().toString(),
                 this.jComboBox33.getSelectedItem().toString(),
-                this.jComboBox34.getSelectedItem().toString()),
+                this.jComboBox34.getSelectedItem().toString(),
+                this.jTextField56.getText()),
                 new String[]{
-                    "Código", "Descripción", "Talle", "Color", "Lugar", "Stock"
+                    "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar", "Stock"
                 });
         this.jTable1.setModel(modelo);
         TableRowSorter rs = new TableRowSorter<DefaultTableModel>(modelo);
@@ -2728,9 +2737,24 @@ public class Principal extends javax.swing.JFrame {
                 return o1.compareTo(o2);
             }
         };
+        Comparator comparador_numerico = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (o1.equals("*")) {
+                    return Integer.MAX_VALUE;
+                }
+                if (o2.equals("*")) {
+                    return Integer.MIN_VALUE;
+                }
+                int io1 = ((o1.equals("")) ? 0 : Integer.parseInt(o1));
+                int io2 = ((o2.equals("")) ? 0 : Integer.parseInt(o2));
+                return io1 - io2;
+            }
+        };
         rs.setComparator(0, comparador_asterisco);
         rs.setComparator(1, comparador_asterisco);
-        rs.setComparator(2, new Comparator<String>() {
+        rs.setComparator(2, comparador_numerico);
+        rs.setComparator(3, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 List<String> l = caracteristicas.getCaracteristica("talles");
@@ -2745,25 +2769,18 @@ public class Principal extends javax.swing.JFrame {
                 return io1 - io2;
             }
         });
-        rs.setComparator(3, comparador_asterisco);
         rs.setComparator(4, comparador_asterisco);
-        rs.setComparator(5, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int io1 = Integer.parseInt(o1);
-                int io2 = Integer.parseInt(o2);
-                return io1 - io2;
-            }
-        });
+        rs.setComparator(5, comparador_asterisco);
+        rs.setComparator(6, comparador_numerico);
         this.jTable1.setRowSorter(rs);
-        this.jTable1.getRowSorter().toggleSortOrder(2);
+        this.jTable1.getRowSorter().toggleSortOrder(3);
         this.jTable1.getRowSorter().toggleSortOrder(0);
         this.jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (int i = 0; i < modelo.getColumnCount(); i++) {
             TableColumn column = this.jTable1.getColumnModel().getColumn(i);
             column.setPreferredWidth(100);
         }
-        this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
+        this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(348);
 
         // Modificacion para que aparesca una linea negra entre cuando
         // se cambia a otro producto en la tabla de la consulta de stock
@@ -3443,7 +3460,7 @@ public class Principal extends javax.swing.JFrame {
         }
         DefaultTableModel modelo = new DefaultTableModel(lineas, new String[]{"#", "Fecha", "Nro factura", "Total S/IVA"});
         this.jTable7.setModel(modelo);
-        
+
         TableColumn column = this.jTable7.getColumnModel().getColumn(0);
         column.setMaxWidth(25);
     }//GEN-LAST:event_jComboBox20ItemStateChanged
@@ -3608,6 +3625,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel104;
     private javax.swing.JLabel jLabel105;
     private javax.swing.JLabel jLabel106;
+    private javax.swing.JLabel jLabel107;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -3811,6 +3829,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField53;
     private javax.swing.JTextField jTextField54;
     private javax.swing.JTextField jTextField55;
+    private javax.swing.JTextField jTextField56;
     private javax.swing.JTextField jTextField57;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
