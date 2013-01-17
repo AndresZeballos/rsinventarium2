@@ -12,6 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -31,7 +33,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Proveedores.findByNombre", query = "SELECT p FROM Proveedores p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Proveedores.findByRuc", query = "SELECT p FROM Proveedores p WHERE p.ruc = :ruc"),
     @NamedQuery(name = "Proveedores.findByDireccion", query = "SELECT p FROM Proveedores p WHERE p.direccion = :direccion"),
-    @NamedQuery(name = "Proveedores.findByPais", query = "SELECT p FROM Proveedores p WHERE p.pais = :pais"),
     @NamedQuery(name = "Proveedores.findByTelefono", query = "SELECT p FROM Proveedores p WHERE p.telefono = :telefono"),
     @NamedQuery(name = "Proveedores.findByCorreo", query = "SELECT p FROM Proveedores p WHERE p.correo = :correo")})
 public class Proveedores implements Serializable {
@@ -44,15 +45,15 @@ public class Proveedores implements Serializable {
     private String ruc;
     @Column(name = "direccion")
     private String direccion;
-    @Basic(optional = false)
-    @Column(name = "pais")
-    private String pais;
     @Column(name = "telefono")
     private String telefono;
     @Column(name = "correo")
     private String correo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proveedor", fetch = FetchType.LAZY)
     private List<Contactos> contactosList;
+    @JoinColumn(name = "pais", referencedColumnName = "pais")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Paises pais;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proveedor", fetch = FetchType.LAZY)
     private List<Facturas> facturasList;
 
@@ -61,11 +62,6 @@ public class Proveedores implements Serializable {
 
     public Proveedores(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Proveedores(String nombre, String pais) {
-        this.nombre = nombre;
-        this.pais = pais;
     }
 
     public String getNombre() {
@@ -92,14 +88,6 @@ public class Proveedores implements Serializable {
         this.direccion = direccion;
     }
 
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
     public String getTelefono() {
         return telefono;
     }
@@ -123,6 +111,14 @@ public class Proveedores implements Serializable {
 
     public void setContactosList(List<Contactos> contactosList) {
         this.contactosList = contactosList;
+    }
+
+    public Paises getPais() {
+        return pais;
+    }
+
+    public void setPais(Paises pais) {
+        this.pais = pais;
     }
 
     @XmlTransient

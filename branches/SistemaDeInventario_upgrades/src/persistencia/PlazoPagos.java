@@ -5,14 +5,18 @@
 package persistencia;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,6 +34,8 @@ public class PlazoPagos implements Serializable {
     @Basic(optional = false)
     @Column(name = "plazopago")
     private String plazopago;
+    @OneToMany(mappedBy = "plazopago", fetch = FetchType.LAZY)
+    private List<Facturas> facturasList;
 
     public PlazoPagos() {
     }
@@ -44,6 +50,15 @@ public class PlazoPagos implements Serializable {
 
     public void setPlazopago(String plazopago) {
         this.plazopago = plazopago;
+    }
+
+    @XmlTransient
+    public List<Facturas> getFacturasList() {
+        return facturasList;
+    }
+
+    public void setFacturasList(List<Facturas> facturasList) {
+        this.facturasList = facturasList;
     }
 
     @Override
