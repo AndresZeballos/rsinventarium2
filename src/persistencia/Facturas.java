@@ -38,13 +38,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Facturas.findByNumero", query = "SELECT f FROM Facturas f WHERE f.numero = :numero"),
     @NamedQuery(name = "Facturas.findByFactura", query = "SELECT f FROM Facturas f WHERE f.factura = :factura"),
     @NamedQuery(name = "Facturas.findByFecha", query = "SELECT f FROM Facturas f WHERE f.fecha = :fecha"),
-    @NamedQuery(name = "Facturas.findByMoneda", query = "SELECT f FROM Facturas f WHERE f.moneda = :moneda"),
-    @NamedQuery(name = "Facturas.findByTipopago", query = "SELECT f FROM Facturas f WHERE f.tipopago = :tipopago"),
-    @NamedQuery(name = "Facturas.findByPlazopago", query = "SELECT f FROM Facturas f WHERE f.plazopago = :plazopago"),
     @NamedQuery(name = "Facturas.findByIva", query = "SELECT f FROM Facturas f WHERE f.iva = :iva"),
     @NamedQuery(name = "Facturas.findByDescuentos", query = "SELECT f FROM Facturas f WHERE f.descuentos = :descuentos"),
     @NamedQuery(name = "Facturas.findByTotalSIva", query = "SELECT f FROM Facturas f WHERE f.totalSIva = :totalSIva")})
 public class Facturas implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,13 +55,6 @@ public class Facturas implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Basic(optional = false)
-    @Column(name = "moneda")
-    private String moneda;
-    @Column(name = "tipopago")
-    private String tipopago;
-    @Column(name = "plazopago")
-    private String plazopago;
     @Basic(optional = false)
     @Column(name = "iva")
     private int iva;
@@ -78,6 +69,15 @@ public class Facturas implements Serializable {
     @JoinColumn(name = "proveedor", referencedColumnName = "nombre")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Proveedores proveedor;
+    @JoinColumn(name = "tipopago", referencedColumnName = "tipopago")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TipoPagos tipopago;
+    @JoinColumn(name = "plazopago", referencedColumnName = "plazopago")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PlazoPagos plazopago;
+    @JoinColumn(name = "moneda", referencedColumnName = "moneda")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Monedas moneda;
 
     public Facturas() {
     }
@@ -86,10 +86,9 @@ public class Facturas implements Serializable {
         this.numero = numero;
     }
 
-    public Facturas(Integer numero, Date fecha, String moneda, int iva, int descuentos, int totalSIva) {
+    public Facturas(Integer numero, Date fecha, int iva, int descuentos, int totalSIva) {
         this.numero = numero;
         this.fecha = fecha;
-        this.moneda = moneda;
         this.iva = iva;
         this.descuentos = descuentos;
         this.totalSIva = totalSIva;
@@ -117,30 +116,6 @@ public class Facturas implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
-    }
-
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
-
-    public String getTipopago() {
-        return tipopago;
-    }
-
-    public void setTipopago(String tipopago) {
-        this.tipopago = tipopago;
-    }
-
-    public String getPlazopago() {
-        return plazopago;
-    }
-
-    public void setPlazopago(String plazopago) {
-        this.plazopago = plazopago;
     }
 
     public int getIva() {
@@ -184,6 +159,30 @@ public class Facturas implements Serializable {
         this.proveedor = proveedor;
     }
 
+    public TipoPagos getTipopago() {
+        return tipopago;
+    }
+
+    public void setTipopago(TipoPagos tipopago) {
+        this.tipopago = tipopago;
+    }
+
+    public PlazoPagos getPlazopago() {
+        return plazopago;
+    }
+
+    public void setPlazopago(PlazoPagos plazopago) {
+        this.plazopago = plazopago;
+    }
+
+    public Monedas getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(Monedas moneda) {
+        this.moneda = moneda;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -208,5 +207,4 @@ public class Facturas implements Serializable {
     public String toString() {
         return "persistencia.Facturas[ numero=" + numero + " ]";
     }
-    
 }

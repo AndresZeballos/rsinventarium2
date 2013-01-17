@@ -5,14 +5,19 @@
 package persistencia;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,6 +35,8 @@ public class Paises implements Serializable {
     @Basic(optional = false)
     @Column(name = "pais")
     private String pais;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pais", fetch = FetchType.LAZY)
+    private List<Proveedores> proveedoresList;
 
     public Paises() {
     }
@@ -44,6 +51,15 @@ public class Paises implements Serializable {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    @XmlTransient
+    public List<Proveedores> getProveedoresList() {
+        return proveedoresList;
+    }
+
+    public void setProveedoresList(List<Proveedores> proveedoresList) {
+        this.proveedoresList = proveedoresList;
     }
 
     @Override
