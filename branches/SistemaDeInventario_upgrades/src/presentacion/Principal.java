@@ -4,30 +4,50 @@
  */
 package presentacion;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import jxl.*;
+import jxl.write.*;
 import logica.ControladorArticulos;
 import logica.ControladorCaracteristicas;
 import logica.ControladorCostos;
@@ -360,6 +380,11 @@ public class Principal extends javax.swing.JFrame {
         jComboBox32 = new javax.swing.JComboBox();
         jComboBox33 = new javax.swing.JComboBox();
         jComboBox34 = new javax.swing.JComboBox();
+        jLabel107 = new javax.swing.JLabel();
+        jTextField56 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jLabel108 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -663,7 +688,7 @@ public class Principal extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Código", "Descripción", "Talle", "Color", "Lugar" , "Stock"
+                "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar" , "Stock"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -680,6 +705,24 @@ public class Principal extends javax.swing.JFrame {
         jLabel52.setText("Marca");
 
         jLabel53.setText("Tela");
+
+        jLabel107.setText("Precio");
+
+        jButton1.setText("PDF");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Excel");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jLabel108.setText("Exportar a:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -711,13 +754,20 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel51)
                             .addComponent(jLabel52)
-                            .addComponent(jLabel53))
+                            .addComponent(jLabel53)
+                            .addComponent(jLabel107))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jComboBox32, 0, 160, Short.MAX_VALUE)
                             .addComponent(jComboBox33, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox34, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jComboBox34, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField56))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel108)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -747,7 +797,12 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ConsultarStock_Consultar))
+                    .addComponent(ConsultarStock_Consultar)
+                    .addComponent(jLabel107)
+                    .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton7)
+                    .addComponent(jLabel108))
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addContainerGap())
@@ -2710,9 +2765,10 @@ public class Principal extends javax.swing.JFrame {
                 this.jComboBox4.getSelectedItem().toString(),
                 this.jComboBox32.getSelectedItem().toString(),
                 this.jComboBox33.getSelectedItem().toString(),
-                this.jComboBox34.getSelectedItem().toString()),
+                this.jComboBox34.getSelectedItem().toString(),
+                this.jTextField56.getText()),
                 new String[]{
-                    "Código", "Descripción", "Talle", "Color", "Lugar", "Stock"
+                    "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar", "Stock"
                 });
         this.jTable1.setModel(modelo);
         TableRowSorter rs = new TableRowSorter<DefaultTableModel>(modelo);
@@ -2728,9 +2784,24 @@ public class Principal extends javax.swing.JFrame {
                 return o1.compareTo(o2);
             }
         };
+        Comparator comparador_numerico = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (o1.equals("*")) {
+                    return Integer.MAX_VALUE;
+                }
+                if (o2.equals("*")) {
+                    return Integer.MIN_VALUE;
+                }
+                int io1 = ((o1.equals("")) ? 0 : Integer.parseInt(o1));
+                int io2 = ((o2.equals("")) ? 0 : Integer.parseInt(o2));
+                return io1 - io2;
+            }
+        };
         rs.setComparator(0, comparador_asterisco);
         rs.setComparator(1, comparador_asterisco);
-        rs.setComparator(2, new Comparator<String>() {
+        rs.setComparator(2, comparador_numerico);
+        rs.setComparator(3, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 List<String> l = caracteristicas.getCaracteristica("talles");
@@ -2745,25 +2816,18 @@ public class Principal extends javax.swing.JFrame {
                 return io1 - io2;
             }
         });
-        rs.setComparator(3, comparador_asterisco);
         rs.setComparator(4, comparador_asterisco);
-        rs.setComparator(5, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int io1 = Integer.parseInt(o1);
-                int io2 = Integer.parseInt(o2);
-                return io1 - io2;
-            }
-        });
+        rs.setComparator(5, comparador_asterisco);
+        rs.setComparator(6, comparador_numerico);
         this.jTable1.setRowSorter(rs);
-        this.jTable1.getRowSorter().toggleSortOrder(2);
+        this.jTable1.getRowSorter().toggleSortOrder(3);
         this.jTable1.getRowSorter().toggleSortOrder(0);
         this.jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (int i = 0; i < modelo.getColumnCount(); i++) {
             TableColumn column = this.jTable1.getColumnModel().getColumn(i);
             column.setPreferredWidth(100);
         }
-        this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
+        this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(348);
 
         // Modificacion para que aparesca una linea negra entre cuando
         // se cambia a otro producto en la tabla de la consulta de stock
@@ -3443,7 +3507,7 @@ public class Principal extends javax.swing.JFrame {
         }
         DefaultTableModel modelo = new DefaultTableModel(lineas, new String[]{"#", "Fecha", "Nro factura", "Total S/IVA"});
         this.jTable7.setModel(modelo);
-        
+
         TableColumn column = this.jTable7.getColumnModel().getColumn(0);
         column.setMaxWidth(25);
     }//GEN-LAST:event_jComboBox20ItemStateChanged
@@ -3495,6 +3559,214 @@ public class Principal extends javax.swing.JFrame {
         calcularTotales();
     }//GEN-LAST:event_jTable3KeyReleased
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar archivo");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                }
+                String fileName = f.getName().toLowerCase();
+                return fileName.endsWith(".xls");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Archivos de excel (.xls)";
+            }
+        });
+        File f;
+        int resultado = chooser.showSaveDialog(null);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            String nombreArchivo = chooser.getSelectedFile().getPath();
+            if (nombreArchivo.endsWith(".xls")) {
+                f = chooser.getSelectedFile();
+            } else {
+                f = new File(nombreArchivo + ".xls");
+            }
+        } else {
+            return;
+        }
+        try {
+            WritableWorkbook workbook = Workbook.createWorkbook(f);
+            WritableSheet sheet = workbook.createSheet("Inventario", 0);
+
+            // Cargamos el contenido de la consulta a la hoja de excel
+            String aux;
+            int offset = 3;
+            TableModel t = this.jTable1.getModel();
+            int j;
+            for (int i = 0; i < t.getRowCount(); i++) {
+                j = this.jTable1.convertRowIndexToModel(i);
+                sheet.addCell(new Label(0, i + offset, (String) t.getValueAt(j, 0)));
+                sheet.addCell(new Label(1, i + offset, (String) t.getValueAt(j, 1)));
+                aux = t.getValueAt(j, 2).toString();
+                if (!aux.equals("") && !aux.equals("*")) {
+                    sheet.addCell(new jxl.write.Number(2, i + offset, Integer.parseInt(aux)));
+                }
+                sheet.addCell(new Label(3, i + offset, (String) t.getValueAt(j, 3)));
+                sheet.addCell(new Label(4, i + offset, (String) t.getValueAt(j, 4)));
+                sheet.addCell(new Label(5, i + offset, (String) t.getValueAt(j, 5)));
+                aux = t.getValueAt(j, 6).toString();
+                if (!aux.equals("")) {
+                    sheet.addCell(new jxl.write.Number(6, i + offset, Integer.parseInt(aux)));
+                }
+            }
+
+            // Agregamos los encabezados de las columnas
+            sheet.addCell(new Label(0, 2, "Código"));
+            sheet.addCell(new Label(1, 2, "Descripción"));
+            sheet.addCell(new Label(2, 2, "Precio ($)"));
+            sheet.addCell(new Label(3, 2, "Talle"));
+            sheet.addCell(new Label(4, 2, "Color"));
+            sheet.addCell(new Label(5, 2, "Lugar"));
+            sheet.addCell(new Label(6, 2, "Stock"));
+
+            // Asignamos los anchos a las columnas
+            sheet.setColumnView(0, 10);
+            sheet.setColumnView(1, 50);
+            sheet.setColumnView(2, 10);
+            sheet.setColumnView(3, 10);
+            sheet.setColumnView(4, 10);
+            sheet.setColumnView(5, 20);
+            sheet.setColumnView(6, 10);
+
+            // Agregamos el titulo y fecha de emision del reporte
+            WritableFont arial10font = new WritableFont(WritableFont.ARIAL, 16, WritableFont.BOLD);
+            WritableCellFormat arial10format = new WritableCellFormat(arial10font);
+            Label titulo = new Label(1, 0, "Rossi Sport", arial10format);
+            sheet.addCell(titulo);
+
+            Label fecha = new Label(4, 0, "Fecha:");
+            sheet.addCell(fecha);
+
+            Date now = Calendar.getInstance().getTime();
+            DateFormat customDateFormat = new DateFormat("dd MMM yyyy hh:mm:ss");
+            WritableCellFormat dateFormat = new WritableCellFormat(customDateFormat);
+            DateTime dateCell = new DateTime(5, 0, now, dateFormat);
+            sheet.addCell(dateCell);
+
+            // Guardamos y cerramos el excel
+            workbook.write();
+            workbook.close();
+
+
+        } catch (WriteException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar archivo");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                }
+                String fileName = f.getName().toLowerCase();
+                return fileName.endsWith(".pdf");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Archivos PDF (.pdf)";
+            }
+        });
+        String f;
+        int resultado = chooser.showSaveDialog(null);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            String nombreArchivo = chooser.getSelectedFile().getPath();
+            if (nombreArchivo.endsWith(".pdf")) {
+                f = nombreArchivo;
+            } else {
+                f = nombreArchivo + ".pdf";
+            }
+        } else {
+            return;
+        }
+        try {
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, new FileOutputStream(f));
+            document.open();
+            document.addTitle("Inventario");
+            Paragraph preface = new Paragraph();
+            Paragraph aux = new Paragraph("Rossi Sport", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_CENTER);
+            preface.add(aux);
+            preface.add(new Paragraph(" "));
+            Date now = Calendar.getInstance().getTime();
+            String s = new SimpleDateFormat("dd MMM yyyy hh:mm:ss").format(now);
+            aux = new Paragraph("Fecha: " + s, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_RIGHT);
+            preface.add(aux);
+            preface.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(7);
+
+            table.setWidths(new float[]{0.6f, 4.0f, 0.8f, 0.6f, 0.6f, 1.2f, 0.6f});
+
+            PdfPCell c1 = new PdfPCell(new Phrase("Código"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Descripción"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Precio ($)"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Talle"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Color"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Lugar"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+            c1 = new PdfPCell(new Phrase("Stock"));
+            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(c1);
+
+
+            table.setHeaderRows(1);
+
+
+
+            int offset = 3;
+            TableModel t = this.jTable1.getModel();
+            int j;
+            for (int i = 0; i < t.getRowCount(); i++) {
+                j = this.jTable1.convertRowIndexToModel(i);
+                table.addCell((String) t.getValueAt(j, 0));
+                table.addCell((String) t.getValueAt(j, 1));
+                table.addCell((String) t.getValueAt(j, 2));
+                table.addCell((String) t.getValueAt(j, 3));
+                table.addCell((String) t.getValueAt(j, 4));
+                table.addCell((String) t.getValueAt(j, 5));
+                table.addCell((String) t.getValueAt(j, 6));
+            }
+
+            preface.add(table);
+
+            document.add(preface);
+            document.close();
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3509,6 +3781,10 @@ public class Principal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
+
+
+
 
 
                 }
@@ -3551,11 +3827,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton Precios_Modificar_Costos;
     private javax.swing.JButton Precios_Modificar_Precio;
     private javax.swing.JButton VerProducto_CargarDatos;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox10;
     private javax.swing.JComboBox jComboBox11;
@@ -3608,6 +3886,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel104;
     private javax.swing.JLabel jLabel105;
     private javax.swing.JLabel jLabel106;
+    private javax.swing.JLabel jLabel107;
+    private javax.swing.JLabel jLabel108;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -3811,6 +4091,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField53;
     private javax.swing.JTextField jTextField54;
     private javax.swing.JTextField jTextField55;
+    private javax.swing.JTextField jTextField56;
     private javax.swing.JTextField jTextField57;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;

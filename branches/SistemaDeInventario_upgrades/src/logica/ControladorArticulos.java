@@ -38,16 +38,17 @@ public class ControladorArticulos {
     }
 
     /**
-     * Metodo responsable de realizar las consultas de stock
+     * Metodo responsable de realizar las consultas de stock. Permite realizar
+     * busquedas avanzadas de articulos por: codigo, talle, color, lugar del
+     * articulo; categoria, marca y composicion del producto y por precio.
      */
-    public String[][] consultar(String codigo, String talle, String color, String local, String categoria, String marca, String tela) {
+    public String[][] consultar(String codigo, String talle, String color, String local, String categoria, String marca, String tela, String precio) {
         String consulta = "";
-        String tablas = " articulos AS a , descripciones AS d ";
+        String tablas = " articulos AS a LEFT JOIN precios AS p ON a.talle = p.talle AND a.codigo = p.codigo, descripciones AS d ";
         String joins = " a.codigo = d.codigo ";
         // Arma las condiciones de la consulta a partir de los filtros presentes
-        if (!codigo.equals("") || !talle.equals("") || !color.equals("") || !local.equals("") || !categoria.equals("") || !marca.equals("") || !tela.equals("")) {
+        if (!codigo.equals("") || !talle.equals("") || !color.equals("") || !local.equals("") || !categoria.equals("") || !marca.equals("") || !tela.equals("") || !precio.equals("")) {
             boolean solo_uno = true;
-            String and = " AND";
             if (!codigo.equals("")) {
                 consulta += " a.codigo = \"" + codigo + "\"";
                 solo_uno = false;
@@ -96,23 +97,32 @@ public class ControladorArticulos {
                     consulta += " AND";
                 }
                 consulta += " c.component = \"" + tela + "\"";
+                solo_uno = false;
+            }
+            if (!precio.equals("")) {
+                if (!solo_uno) {
+                    consulta += " AND";
+                }
+                consulta += " p.precio = \"" + precio + "\"";
+                // solo_uno = false;
             }
         }
         String[][] resultado = new String[][]{};
         Statement stmt = this.c.getStatement();
         ResultSet rs;
         try {
+            int cColumnas = 7;
             // Completa la consulta con las tablas, reuniones y condiciones
-            consulta = "SELECT DISTINCT a.codigo, d.descripcion, a.talle, a.color, a.local, a.stock "
+            consulta = "SELECT DISTINCT a.codigo, d.descripcion, p.precio, a.talle, a.color, a.local, a.stock "
                     + "FROM " + tablas + " WHERE " + joins + ((consulta.equals("")) ? "" : " AND ") + consulta; // + " ORDER BY a.codigo";
             rs = stmt.executeQuery(consulta);
             // Crea la estructura a retornar a partir de la cantidad de resultados de la consulta
             rs.last();
             int rowCount = rs.getRow();
             if (rowCount != 1) {
-                resultado = new String[rowCount + 1][6];
+                resultado = new String[rowCount + 1][cColumnas];
             } else {
-                resultado = new String[rowCount][6];
+                resultado = new String[rowCount][cColumnas];
             }
             int suma = 0;
             rs.first();
@@ -120,10 +130,11 @@ public class ControladorArticulos {
             for (int i = 0; i < rowCount; i++, rs.next()) {
                 resultado[i][0] = rs.getString("codigo");
                 resultado[i][1] = rs.getString("descripcion");
-                resultado[i][2] = rs.getString("talle");
-                resultado[i][3] = rs.getString("color");
-                resultado[i][4] = rs.getString("local");
-                resultado[i][5] = rs.getString("stock");
+                resultado[i][2] = ((rs.getString("precio") == null) ? "" : rs.getString("precio"));
+                resultado[i][3] = rs.getString("talle");
+                resultado[i][4] = rs.getString("color");
+                resultado[i][5] = rs.getString("local");
+                resultado[i][6] = rs.getString("stock");
                 suma += Integer.parseInt(rs.getString("stock"));
             }
             // Agrega la fila con los datos genericos (*) o concretos y su suma
@@ -134,22 +145,27 @@ public class ControladorArticulos {
                     resultado[rowCount][0] = "*";
                 }
                 resultado[rowCount][1] = "*";
-                if (!talle.equals("")) {
-                    resultado[rowCount][2] = talle;
+                if (!precio.equals("")) {
+                    resultado[rowCount][2] = "$" + precio;
                 } else {
                     resultado[rowCount][2] = "*";
                 }
-                if (!color.equals("")) {
-                    resultado[rowCount][3] = color;
+                if (!talle.equals("")) {
+                    resultado[rowCount][3] = talle;
                 } else {
                     resultado[rowCount][3] = "*";
                 }
-                if (!local.equals("")) {
-                    resultado[rowCount][4] = local;
+                if (!color.equals("")) {
+                    resultado[rowCount][4] = color;
                 } else {
                     resultado[rowCount][4] = "*";
                 }
-                resultado[rowCount][5] = String.valueOf(suma);
+                if (!local.equals("")) {
+                    resultado[rowCount][5] = local;
+                } else {
+                    resultado[rowCount][5] = "*";
+                }
+                resultado[rowCount][6] = String.valueOf(suma);
             }
         } catch (SQLException e) {
             JOptionPane.showConfirmDialog(null, "Ocurrió un problema al consultar el stock.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -158,7 +174,7 @@ public class ControladorArticulos {
     }
 
     /**
-     * 
+     *
      */
     public boolean actualizarStock(String codigo, String talle, String color, String local, int cantidad) {
         Statement stmt = this.c.getStatement();
@@ -185,8 +201,8 @@ public class ControladorArticulos {
     }
 
     /**
-     * Procesa el archivo aumentando o reduciendo el stock dependiendo
-     * del parametro aumentar.
+     * Procesa el archivo aumentando o reduciendo el stock dependiendo del
+     * parametro aumentar.
      */
     public boolean cargar(String archivo, boolean aumentar) {
         // Carga el contenido del archivo y lo valida
@@ -235,8 +251,8 @@ public class ControladorArticulos {
     }
 
     /**
-     * Abre el archivo pasado por parametro y lee su contenido
-     * almacenandolo en memoria para procesarlo.
+     * Abre el archivo pasado por parametro y lee su contenido almacenandolo en
+     * memoria para procesarlo.
      */
     private ArrayList<String[]> levantarCSV(String archivo) {
         ArrayList<String[]> resultado = new ArrayList<String[]>();
@@ -269,8 +285,8 @@ public class ControladorArticulos {
     }
 
     /**
-     * Valida que los códigos de todos los artículos a ingresar 
-     * esten dados de alta en el sistema.
+     * Valida que los códigos de todos los artículos a ingresar esten dados de
+     * alta en el sistema.
      */
     private boolean validarCSV(ArrayList<String[]> csv) {
         String[] linea;
@@ -285,8 +301,8 @@ public class ControladorArticulos {
     }
 
     /**
-     * Luego de procesar el CSV, se guarda su información agregando el
-     * resultado en cada fila ("OK" o "NO")
+     * Luego de procesar el CSV, se guarda su información agregando el resultado
+     * en cada fila ("OK" o "NO")
      */
     private void guardarCSV(String archivo, ArrayList<String[]> resultado) {
         FileWriter fichero = null;
