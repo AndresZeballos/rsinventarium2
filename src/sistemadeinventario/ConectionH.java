@@ -1,9 +1,9 @@
 package sistemadeinventario;
 
-import java.io.FileInputStream;
 import java.sql.*;
-import java.util.Properties;
+import java.util.Hashtable;
 import javax.swing.JOptionPane;
+import logica.ControladorConfiguracion;
 
 /*
  * Esta clase levanta el archivo de configuración ubicado en:
@@ -28,7 +28,7 @@ public class ConectionH {
     }
 
     public ConectionH() {
-        leer_ini();
+        leer_configuracion();
         try {
             Class.forName(driver); // Class.forName("com.mysql.jdbc.Driver");
             String url = jdbc + host + puerto + base; // "jdbc:mysql://localhost:3306/rossisport";
@@ -41,21 +41,18 @@ public class ConectionH {
         }
     }
     
-    private void leer_ini() {
-        try {
-            Properties p = new Properties();
-            p.load(new FileInputStream("C:\\Sistema de RossiSport\\params.ini"));
-            driver = p.getProperty("driver");
-            jdbc = p.getProperty("jdbc");
-            host = p.getProperty("host");
-            puerto = p.getProperty("puerto");
-            base = p.getProperty("base");
-            // Si no está el parametro user, utiliza uno por defecto ("usuario")
-            usuario = p.getProperty("user", "usuario");
-            contraseña = p.getProperty("data");
-        } catch (Exception e) {
+    private void leer_configuracion() {
+        Hashtable<String, String> conf = ControladorConfiguracion.leer_ini();
+        if(conf!= null){
+            driver = conf.get("driver");
+            jdbc = conf.get("jdbc");
+            host = conf.get("host");
+            puerto = conf.get("puerto");
+            base = conf.get("base");
+            usuario = conf.get("usuario");
+            contraseña = conf.get("contraseña");
+        } else {
             this.ok = false;
-            JOptionPane.showConfirmDialog(null, "Ocurrió un problema", "Error al leer la configuración", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
         }
     }
 }

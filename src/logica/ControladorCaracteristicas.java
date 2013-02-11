@@ -92,7 +92,11 @@ public class ControladorCaracteristicas {
             "tipo_pagos",
             "plazo_pagos",
             "paises",
-            "proveedores"
+            "proveedores",
+            // Modificación para modulo de seguridad
+            "permisos",
+            "grupos",
+            "usuarios"
         };
         Statement stmt = c.getStatement();
         ResultSet rs;
@@ -222,7 +226,6 @@ public class ControladorCaracteristicas {
             JOptionPane.showConfirmDialog(null, "Problema de inserción!\nNo esta permitida esta operación", "Error!!!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        this.initCaracteristicas();
         return true;
     }
 
@@ -248,7 +251,6 @@ public class ControladorCaracteristicas {
             JOptionPane.showConfirmDialog(null, "Problema de eliminación!\nNo esta permitida esta operación", "Error!!!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        this.initCaracteristicas();
         return true;
     }
 }

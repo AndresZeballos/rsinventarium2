@@ -22,6 +22,12 @@
     <class>persistencia.Paises</class>
     <class>persistencia.Costos</class>
     <class>persistencia.Monedas</class>
+    <class>persistencia.GrupoPermiso</class>
+    <class>persistencia.Grupos</class>
+    <class>persistencia.Permisos</class>
+    <class>persistencia.Usuarios</class>
+    <class>persistencia.Logs</class>
+    <class>persistencia.Modulos</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rossisport"/>
       <property name="javax.persistence.jdbc.password" value="data"/>

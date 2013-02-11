@@ -17,11 +17,9 @@ import sistemadeinventario.ConectionH;
  */
 public class ControladorProveedor {
 
-    private ControladorCaracteristicas caracteristicas;
     private ConectionH c;
 
-    public ControladorProveedor(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
+    public ControladorProveedor() {
         this.c = new ConectionH();
     }
 
@@ -43,8 +41,6 @@ public class ControladorProveedor {
             JOptionPane.showConfirmDialog(null, "Ocurrió un problema al crear el proveedor.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        // Actualiza las listas cargadas en memoria
-        this.caracteristicas.initCaracteristicas();
         return true;
     }
 
