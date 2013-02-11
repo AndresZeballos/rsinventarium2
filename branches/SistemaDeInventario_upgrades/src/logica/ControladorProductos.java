@@ -19,11 +19,9 @@ import sistemadeinventario.ConectionH;
  */
 public class ControladorProductos {
 
-    private ControladorCaracteristicas caracteristicas;
     private ConectionH c;
 
-    public ControladorProductos(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
+    public ControladorProductos() {
         this.c = new ConectionH();
     }
 
@@ -48,8 +46,6 @@ public class ControladorProductos {
         } catch (SQLException ex) {
             JOptionPane.showConfirmDialog(null, "Ocurrió un problema al crear el producto.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
         }
-        // Actualiza las listas cargadas en memoria
-        this.caracteristicas.initCaracteristicas();
         return true;
     }
 
@@ -152,8 +148,6 @@ public class ControladorProductos {
             JOptionPane.showConfirmDialog(null, "Ocurrió un problema al eliminar el producto.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        // Actualiza las listas cargadas en memoria
-        this.caracteristicas.initCaracteristicas();
         return true;
     }
 }
