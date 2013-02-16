@@ -113,7 +113,7 @@ public class ControladorGrupos {
             Query query = s.getNamedQuery("Grupos.findByNombre");
             query.setString("nombre", grupo);
             Grupos g = (Grupos) query.uniqueResult();
-            Logger.log(s, permiso, "Imagen anterior: " + grupo.toString());
+            Logger.log(s, permiso, "Imagen anterior: " + g.toString());
             for(Usuarios u : g.getUsuariosList()){
                 Logger.log(s, permiso, "Usuario asociado: " + u.toString());
             }
