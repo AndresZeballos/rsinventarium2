@@ -508,6 +508,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel70 = new javax.swing.JLabel();
         jTextField18 = new javax.swing.JTextField();
         jLabel71 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
         jPanel19 = new javax.swing.JPanel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         jPanel20 = new javax.swing.JPanel();
@@ -1788,6 +1789,9 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel71.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
+        jCheckBox1.setSelected(true);
+        jCheckBox1.setText("Etiquetas con precio");
+
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
         jPanel17Layout.setHorizontalGroup(
@@ -1813,7 +1817,8 @@ public class Principal extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel17Layout.createSequentialGroup()
                                 .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING))))
                 .addContainerGap(255, Short.MAX_VALUE))
         );
         jPanel17Layout.setVerticalGroup(
@@ -1839,7 +1844,9 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jFileChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFileChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -3221,7 +3228,10 @@ public class Principal extends javax.swing.JFrame {
         String descripcion = this.productos.cargarDatos(codigo).get("descripcion");
 
         String archivo = this.jFileChooser3.getSelectedFile().getPath();
-        if (ControladorEtiquetas.imprimir(archivo, codigo, descripcion, precio, talle, color, cantidad)) {
+        // M9 INICIO
+        boolean con_precio = this.jCheckBox1.isSelected();
+        // M9 FIN
+        if (ControladorEtiquetas.imprimir(archivo, codigo, descripcion, precio, talle, color, cantidad, con_precio)) {
             this.jLabel71.setText("El archivo fue creado correctamente");
         }
     }//GEN-LAST:event_jFileChooser3ActionPerformed
@@ -3573,6 +3583,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox10;
     private javax.swing.JComboBox jComboBox11;
