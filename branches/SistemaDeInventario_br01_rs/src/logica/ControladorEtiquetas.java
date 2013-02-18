@@ -14,22 +14,33 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
- * Esta clase contiene la lógica de generación de archivos de etiquetas
- * para su impresión en la impresora deseada.
+ * Esta clase contiene la lógica de generación de archivos de etiquetas para su
+ * impresión en la impresora deseada.
+ *
  * @author Andres
  */
 public class ControladorEtiquetas {
 
+    private static String con = "C:\\Sistema de RossiSport\\etiqueta_con_precio.txt";
+    private static String sin = "C:\\Sistema de RossiSport\\etiqueta_sin_precio.txt";
+
     /**
-     * Levanta el template de etiquetas, lo procesa remplazando los campos con los 
-     * datos pasados por parametro y lo guarda en archivo.
+     * Levanta el template de etiquetas, lo procesa remplazando los campos con
+     * los datos pasados por parametro y lo guarda en archivo.
      */
-    public static boolean imprimir(String archivo, String codigo, String descripcion, String precio, String talle, String color, int cantidad) {
+    public static boolean imprimir(String archivo, String codigo, String descripcion, String precio, String talle, String color, int cantidad, boolean con_precio) {
         ArrayList<String> resultado = new ArrayList<String>();
 
         try {
             // Abrimos el archivo
-            FileInputStream fstream = new FileInputStream("C:\\Sistema de RossiSport\\template.txt");
+            FileInputStream fstream;
+            // M9 INICIO
+            if (con_precio) {
+                fstream = new FileInputStream(con);
+            } else {
+                fstream = new FileInputStream(sin);
+            }
+            // M9 FIN
             // Creamos el objeto de entrada
             DataInputStream entrada = new DataInputStream(fstream);
             // Creamos el Buffer de Lectura
