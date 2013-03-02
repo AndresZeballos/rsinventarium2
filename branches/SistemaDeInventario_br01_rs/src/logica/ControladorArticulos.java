@@ -45,7 +45,8 @@ public class ControladorArticulos {
     public String[][] consultar(String codigo, String talle, String color, String local, String categoria, String marca, String tela, String precio) {
         String consulta = "";
         String tablas = " articulos AS a LEFT JOIN precios AS p ON a.talle = p.talle AND a.codigo = p.codigo, descripciones AS d ";
-        String joins = " a.codigo = d.codigo ";
+        // Se agrega a.stock <> 0 AND para evitar los resultados "vacios"
+        String joins = " a.stock <> 0 AND a.codigo = d.codigo ";
         // Arma las condiciones de la consulta a partir de los filtros presentes
         if (!codigo.equals("") || !talle.equals("") || !color.equals("") || !local.equals("") || !categoria.equals("") || !marca.equals("") || !tela.equals("") || !precio.equals("")) {
             boolean solo_uno = true;

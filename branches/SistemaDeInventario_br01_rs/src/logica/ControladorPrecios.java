@@ -64,7 +64,7 @@ public class ControladorPrecios {
             }
             stmt.executeUpdate(update);
         } catch (SQLException ex) {
-            JOptionPane.showConfirmDialog(null, "Ocurrió un problema al modificar el precio.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Ocurrió un problema al modificar el precio: "+codigo+"-"+talle+".", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
