@@ -24,7 +24,7 @@ public class ControladorCostos {
 
     public String[] cargar(String codigo, String talle) {
         Statement stmt = this.c.getStatement();
-        String[] costos = new String[3];
+        String[] costos = new String[]{"", "", ""};
         try {
             String select = "SELECT origen, costo_entrada, costo_compra FROM costos"
                     + " WHERE codigo='" + codigo + "' AND talle='" + talle + "';";
@@ -33,8 +33,17 @@ public class ControladorCostos {
             if (rs.getRow() != 0) {
                 rs.first();
                 costos[0] = rs.getString("origen");
+                if(costos[0] == null || costos[0].equals("null")){
+                    costos[0] = "";
+                }
                 costos[1] = rs.getString("costo_entrada");
+                if(costos[1] == null || costos[1].equals("null")){
+                    costos[1] = "";
+                }
                 costos[2] = rs.getString("costo_compra");
+                if(costos[2] == null || costos[2].equals("null")){
+                    costos[2] = "";
+                }
             }
         } catch (Exception e) {
             JOptionPane.showConfirmDialog(null, "Ocurrió un problema al cargar los costos.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -58,7 +67,7 @@ public class ControladorCostos {
             }
             stmt.executeUpdate(update);
         } catch (SQLException ex) {
-            JOptionPane.showConfirmDialog(null, "Ocurrió un problema al modificar los costos.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Error!", "Ocurrió un problema al modificar los costos.\nProducto: " + codigo + " Talle: " + talle + ".", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

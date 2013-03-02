@@ -1,0 +1,429 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package presentacion;
+
+import java.awt.event.ItemEvent;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import logica.ControladorArticulos;
+import logica.ControladorCaracteristicas;
+import logica.ControladorPrecios;
+
+/**
+ *
+ * @author Andres
+ */
+public class BajarStock extends javax.swing.JPanel {
+
+    private ControladorCaracteristicas caracteristicas;
+    private ControladorArticulos articulos;
+    private ControladorPrecios precios;
+    private String local;
+
+    public ControladorCaracteristicas getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
+        this.caracteristicas = caracteristicas;
+
+        cargarCombo("descripciones", this.jComboBox1);
+        cargarCombo("talles", this.jComboBox2);
+        cargarCombo("colores", this.jComboBox3);
+        cargarCombo("locales", this.jComboBox4);
+        this.jComboBox4.setSelectedItem(this.local);
+    }
+
+    public ControladorArticulos getArticulos() {
+        return articulos;
+    }
+
+    public void setArticulos(ControladorArticulos articulos) {
+        this.articulos = articulos;
+    }
+
+    public ControladorPrecios getPrecios() {
+        return precios;
+    }
+
+    public void setPrecios(ControladorPrecios precios) {
+        this.precios = precios;
+    }
+
+    /**
+     * Creates new form BajarStock
+     */
+    public BajarStock() {
+        initComponents();
+        String l;
+        try {
+            Properties props = new Properties();
+            props.load(new FileInputStream("C:\\Sistema de RossiSport\\params.ini"));
+            l = props.getProperty("local");
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, "Ocurrió un problema", "Error al leer la configuración", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        this.local = l;
+    }
+
+    /**
+     * Carga el combo indicado con los datos de la tabla.
+     */
+    private void cargarCombo(String tabla, JComboBox comboBox) {
+        String selected = null;
+        if (comboBox.getSelectedItem() != null) {
+            selected = comboBox.getSelectedItem().toString();
+        }
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        model.addElement("");
+        List<String> l = this.caracteristicas.getCaracteristica(tabla);
+        for (String m : l) {
+            model.addElement(m);
+        }
+        comboBox.setModel(model);
+        if (selected != null) {
+            comboBox.setSelectedItem(selected);
+        }
+    }
+
+    private void cargarTabla() {
+        String codigo = this.jTextField1.getText();
+        if (codigo.length() != 13) {
+            return;
+        }
+        String p = codigo.substring(0, 5);
+        String t = codigo.substring(5, 8).trim();
+        String c = codigo.substring(8, 13).trim();
+        boolean foo = this.caracteristicas.existeElementoCaracteristica(p, "descripciones");
+        foo &= this.caracteristicas.existeElementoCaracteristica(t, "talles");
+        foo &= this.caracteristicas.existeElementoCaracteristica(c, "colores");
+        if (!foo) {
+            this.jLabel5.setText("Código de barras invalido");
+            return;
+        }
+        String l = this.jComboBox4.getSelectedItem().toString();
+        if (l.equals("")) {
+            return;
+        }
+        String prec = this.precios.cargar(p, t);
+        DefaultTableModel model = (DefaultTableModel) this.jTable3.getModel();
+        model.addRow(new Object[]{new Integer(1), p, t, c, prec});
+        this.jTextField1.setText("");
+        this.jComboBox1.setSelectedIndex(0);
+        this.jComboBox2.setSelectedIndex(0);
+        this.jComboBox3.setSelectedIndex(0);
+        this.jLabel5.setText("");
+    }
+
+    private void validarIngreso() {
+        this.jLabel5.setText("");
+        String p = this.jComboBox1.getSelectedItem().toString();
+        String t = this.jComboBox2.getSelectedItem().toString();
+        String c = this.jComboBox3.getSelectedItem().toString();
+        if (p.equals("")) {
+            return;
+        }
+        if (t.equals("")) {
+            return;
+        }
+        if (c.equals("")) {
+            return;
+        }
+        String codigo = p + t;
+        while (codigo.length() != 8) {
+            codigo += " ";
+        }
+        codigo += c;
+        while (codigo.length() != 13) {
+            codigo += " ";
+        }
+        this.jTextField1.setText(codigo);
+        cargarTabla();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox4 = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+
+        setMinimumSize(new java.awt.Dimension(975, 528));
+
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cantidad", "Producto", "Talle", "Color", "Precio"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane7.setViewportView(jTable3);
+
+        jLabel1.setText("Producto");
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
+        jLabel2.setText("Talle");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
+
+        jLabel3.setText("Color");
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox3ItemStateChanged(evt);
+            }
+        });
+
+        jLabel4.setText("Local");
+
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jButton1.setText("Bajar stock");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Borrar lineas");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Código de barras");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(165, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton6)))
+                .addContainerGap(145, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Cantidad", "Producto", "Talle", "Color", "Precio"
+                }) {
+            Class[] types = new Class[]{
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+        });
+        this.jLabel5.setText("");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.jLabel5.setText("");
+        TableModel tabla = this.jTable3.getModel();
+        ArrayList<String[]> lineas = new ArrayList<String[]>();
+        String p, t, c, l, cant;
+        l = this.jComboBox4.getSelectedItem().toString();
+        if (l.equals("")) {
+            this.jLabel5.setText("Debe ingresar el local.");
+            return;
+        }
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            cant = tabla.getValueAt(i, 0).toString();
+            p = tabla.getValueAt(i, 1).toString();
+            t = tabla.getValueAt(i, 2).toString();
+            c = tabla.getValueAt(i, 3).toString();
+            lineas.add(new String[]{p, t, c, l, cant});
+        }
+        boolean resultado;
+        int i;
+        for (i = 0; i < lineas.size(); i++) {
+            p = lineas.get(i)[0];
+            t = lineas.get(i)[1];
+            c = lineas.get(i)[2];
+            l = lineas.get(i)[3];
+            cant = lineas.get(i)[4];
+            resultado = this.articulos.actualizarStock(p, t, c, l, -Integer.parseInt(cant));
+            if (!resultado) {
+                break;
+            }
+        }
+        if (i != lineas.size()) {
+            // Si ocurrió un error revierto los cambios
+            for (int j = 0; j <= i; j++) {
+                p = lineas.get(j)[0];
+                t = lineas.get(j)[1];
+                c = lineas.get(j)[2];
+                l = lineas.get(j)[3];
+                cant = lineas.get(j)[4];
+                this.articulos.actualizarStock(p, t, c, l, Integer.parseInt(cant));
+            }
+            //ControladorEtiquetas.limpiar(archivo);
+            this.jLabel5.setText("Ocurrio un error.");
+            return;
+        }
+        jButton6ActionPerformed(null);
+        this.jLabel5.setText("Opercación exitosa");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            validarIngreso();
+        }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            validarIngreso();
+        }
+    }//GEN-LAST:event_jComboBox2ItemStateChanged
+
+    private void jComboBox3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox3ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            validarIngreso();
+        }
+    }//GEN-LAST:event_jComboBox3ItemStateChanged
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        this.jLabel5.setText("");
+        String codigo = this.jTextField1.getText();
+        if (codigo.length() > 13) {
+            codigo = codigo.substring(0, 13);
+            this.jTextField1.setText(codigo);
+        }
+        if (codigo.length() == 13) {
+            cargarTabla();
+        }
+    }//GEN-LAST:event_jTextField1KeyReleased
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox jComboBox3;
+    private javax.swing.JComboBox jComboBox4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JTable jTable3;
+    private javax.swing.JTextField jTextField1;
+    // End of variables declaration//GEN-END:variables
+}

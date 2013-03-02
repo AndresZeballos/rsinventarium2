@@ -28,7 +28,10 @@ public class ControladorEtiquetas {
      * Levanta el template de etiquetas, lo procesa remplazando los campos con
      * los datos pasados por parametro y lo guarda en archivo.
      */
-    public static boolean imprimir(String archivo, String codigo, String descripcion, String precio, String talle, String color, int cantidad, boolean con_precio) {
+    public static boolean imprimir(String archivo, String codigo, String descripcion, String precio, String talle, String color, int cantidad, boolean con_precio, boolean append) {
+        if(archivo == null){
+            archivo = "LPT1:";
+        }
         ArrayList<String> resultado = new ArrayList<String>();
 
         try {
@@ -60,7 +63,11 @@ public class ControladorEtiquetas {
 
         // Formateo de los datos
         // Formateo de la barra
-        String barra = codigo + talle;
+        String barra = codigo;
+        while (barra.length() < 5) {
+            barra += " ";
+        }
+        barra += talle;
         while (barra.length() < 8) {
             barra += " ";
         }
@@ -102,7 +109,11 @@ public class ControladorEtiquetas {
         FileWriter fichero = null;
         PrintWriter pw;
         try {
-            fichero = new FileWriter(archivo);
+            if(archivo.equals("LPT1:")){
+                fichero = new FileWriter(archivo);
+            } else {
+                fichero = new FileWriter(archivo, append);
+            }
             pw = new PrintWriter(fichero);
 
             for (int i = 0; i < resultado.size(); i++) {
@@ -112,7 +123,7 @@ public class ControladorEtiquetas {
             fichero.close();
 
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, "Ocurrió un problema de escritura.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Ocurrió un problema de escritura.\nIntente montar la impresora.", "Error!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {
             try {
@@ -127,5 +138,25 @@ public class ControladorEtiquetas {
             }
         }
         return true;
+    }
+
+    public static void limpiar(String archivo) {
+        FileWriter fichero = null;
+        PrintWriter pw;
+        try {
+            fichero = new FileWriter(archivo);
+            pw = new PrintWriter(fichero);
+            pw.println("");
+            pw.close();
+            fichero.close();
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (fichero != null) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+            }
+        }
     }
 }

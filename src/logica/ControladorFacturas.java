@@ -33,7 +33,7 @@ public class ControladorFacturas {
     /**
      *
      */
-    public boolean crear(String prov, String fac, String fecha, String mon, String tipop, String plazop, int iva, int desc, int total_s_iva, ArrayList<String[]> lineas) {
+    public boolean crear(String prov, String fac, String fecha, String mon, String tipop, String plazop, int iva, int desc, int total_s_iva, ArrayList<String[]> lineas, boolean actualizar_stock) {
         String local = getLocal();
         Statement stmt = this.c.getStatement();
         String insert =
@@ -53,7 +53,9 @@ public class ControladorFacturas {
                 insert = "INSERT INTO linea_factura (factura, linea, cantidad, codigo, talle, color, precio) "
                         + "VALUES ('" + clave + "', '" + i + "', '" + linea[0] + "', '" + linea[1] + "', '" + linea[2] + "', '" + linea[3] + "', '" + linea[4] + "')";
                 stmt.executeUpdate(insert);
-                this.articulos.actualizarStock(linea[1], linea[2], linea[3], local, Integer.parseInt(linea[0]));
+                if (actualizar_stock) {
+                    this.articulos.actualizarStock(linea[1], linea[2], linea[3], local, Integer.parseInt(linea[0]));
+                }
                 this.costos.modificar(linea[1], linea[2], linea[4]);
                 i++;
             }
@@ -122,7 +124,7 @@ public class ControladorFacturas {
         }
         return datos;
     }
-    
+
     public ArrayList<String[]> cargarFacturaLineas(int nfactura) {
         ArrayList<String[]> lineas = new ArrayList<String[]>();
         Statement stmt = c.getStatement();
@@ -142,5 +144,4 @@ public class ControladorFacturas {
         }
         return lineas;
     }
-    
 }
