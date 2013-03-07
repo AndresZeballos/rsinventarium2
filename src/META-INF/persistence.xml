@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="SistemaDeInventarioPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>persistencia.Talles</class>
+    <class>persistencia.TipoPagos</class>
+    <class>persistencia.Usuarios</class>
+    <class>persistencia.LineaFactura</class>
+    <class>persistencia.Articulos</class>
+    <class>persistencia.Locales</class>
+    <class>persistencia.GrupoPermiso</class>
+    <class>persistencia.Costos</class>
+    <class>persistencia.PlazoPagos</class>
+    <class>persistencia.Modulos</class>
+    <class>persistencia.Marcas</class>
+    <class>persistencia.Categorias</class>
+    <class>persistencia.Precios</class>
+    <class>persistencia.Grupos</class>
+    <class>persistencia.Permisos</class>
+    <class>persistencia.Paises</class>
+    <class>persistencia.Componentes</class>
+    <class>persistencia.Proveedores</class>
+    <class>persistencia.Colores</class>
+    <class>persistencia.Monedas</class>
+    <class>persistencia.Descripciones</class>
+    <class>persistencia.Facturas</class>
+    <class>persistencia.Contactos</class>
+    <class>persistencia.Logs</class>
+    <class>persistencia.Composiciones</class>
+    <class>persistencia.Meses</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rossisport"/>
+      <property name="javax.persistence.jdbc.password" value="data"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="usuario"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -4,11 +4,25 @@
  */
 package presentacion;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
@@ -172,10 +186,13 @@ public class Principal extends javax.swing.JFrame {
         this.prototipoPrecioCostos1.setCaracteristicas(caracteristicas);
         this.prototipoPrecioCostos1.setCostos(costos);
         this.prototipoPrecioCostos1.setPrecios(precios);
-        
+
         this.bajarStock1.setArticulos(articulos);
         this.bajarStock1.setCaracteristicas(caracteristicas);
         this.bajarStock1.setPrecios(precios);
+
+        this.listadoProductos.setCaracteristicas(caracteristicas);
+        this.listadoProductos.setProductos(productos);
 
         // Mejoras varias a la pantalla de compras
         this.jComboBox16.setSelectedIndex(1);
@@ -216,23 +233,23 @@ public class Principal extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{comp, new Integer(0)});
             }
         } else {
-            if(l.size() != modelo.getRowCount()){
+            if (l.size() != modelo.getRowCount()) {
                 modelo.addRow(new Object[]{l.get(l.size() - 1), new Integer(0)});
             }
         }
         /*
-        DefaultListModel model = new DefaultListModel();
-        if (borrar_text) {
-            area.setText("");
-        }
-        for (String m : l) {
-            model.addElement(m);
-            if (borrar_text) {
-                area.setText(area.getText() + "0\n");
-            }
-        }
-        list.setModel(model);
-        */
+         DefaultListModel model = new DefaultListModel();
+         if (borrar_text) {
+         area.setText("");
+         }
+         for (String m : l) {
+         model.addElement(m);
+         if (borrar_text) {
+         area.setText(area.getText() + "0\n");
+         }
+         }
+         list.setModel(model);
+         */
     }
 
     /**
@@ -269,18 +286,18 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         /*
-        ListModel model = lista.getModel();
-        String str = "";
+         ListModel model = lista.getModel();
+         String str = "";
 
-        for (int i = 0; i < model.getSize(); i++) {
-            if (componentes.containsKey(model.getElementAt(i))) {
-                str += componentes.get(model.getElementAt(i)) + "\n";
-            } else {
-                str += "0\n";
-            }
-        }
-        porcentajes.setText(str);
-        */
+         for (int i = 0; i < model.getSize(); i++) {
+         if (componentes.containsKey(model.getElementAt(i))) {
+         str += componentes.get(model.getElementAt(i)) + "\n";
+         } else {
+         str += "0\n";
+         }
+         }
+         porcentajes.setText(str);
+         */
     }
 
     private DefaultTableModel agregarLinea(TableModel a) {
@@ -423,6 +440,7 @@ public class Principal extends javax.swing.JFrame {
         jComboBox34 = new javax.swing.JComboBox();
         jLabel107 = new javax.swing.JLabel();
         jTextField56 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
         jPanel22 = new javax.swing.JPanel();
         jTabbedPane5 = new javax.swing.JTabbedPane();
         prototipoIngresoMasivoEImpresion1 = new presentacion.PrototipoIngresoMasivoEImpresion();
@@ -523,6 +541,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel49 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
         jTextField25 = new javax.swing.JTextField();
+        listadoProductos = new presentacion.ListadoProductos();
         prototipoPrecioCostos1 = new presentacion.PrototipoPrecioCostos();
         jPanel14 = new javax.swing.JPanel();
         jLabel58 = new javax.swing.JLabel();
@@ -703,12 +722,28 @@ public class Principal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null}
+                {"", "", "", "", "", "", ""}
             },
             new String [] {
-                "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar" , "Stock"
+                "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar", "Stock"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
 
         ConsultarStock_Consultar.setText("Consultar");
@@ -725,6 +760,13 @@ public class Principal extends javax.swing.JFrame {
         jLabel53.setText("Tela");
 
         jLabel107.setText("Precio");
+
+        jButton5.setText("Imprimir");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -764,7 +806,8 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(jComboBox33, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jComboBox34, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextField56))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -796,7 +839,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ConsultarStock_Consultar)
                     .addComponent(jLabel107)
-                    .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5))
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1541,6 +1585,7 @@ public class Principal extends javax.swing.JFrame {
         );
 
         jTabbedPane2.addTab("Eliminar producto", jPanel7);
+        jTabbedPane2.addTab("Listado de productos", listadoProductos);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -1548,7 +1593,7 @@ public class Principal extends javax.swing.JFrame {
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 955, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
@@ -2603,7 +2648,22 @@ public class Principal extends javax.swing.JFrame {
                 this.jTextField56.getText()),
                 new String[]{
                     "Código", "Descripción", "Precio ($)", "Talle", "Color", "Lugar", "Stock"
-                });
+                }) {
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
         this.jTable1.setModel(modelo);
         TableRowSorter rs = new TableRowSorter<DefaultTableModel>(modelo);
         Comparator comparador_asterisco = new Comparator<String>() {
@@ -2659,7 +2719,7 @@ public class Principal extends javax.swing.JFrame {
         this.jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (int i = 0; i < modelo.getColumnCount(); i++) {
             TableColumn column = this.jTable1.getColumnModel().getColumn(i);
-            column.setPreferredWidth(100);
+            column.setPreferredWidth(95);
         }
         this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(348);
 
@@ -2801,7 +2861,7 @@ public class Principal extends javax.swing.JFrame {
         Hashtable<String, String> componentes = new Hashtable<String, String>();
         Integer porc;
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            porc =  (Integer) modelo.getValueAt(i, 1);
+            porc = (Integer) modelo.getValueAt(i, 1);
             if (porc > 0) {
                 componentes.put(modelo.getValueAt(i, 0).toString(), modelo.getValueAt(i, 1).toString());
             } else {
@@ -2861,7 +2921,7 @@ public class Principal extends javax.swing.JFrame {
         Hashtable<String, String> componentes = new Hashtable<String, String>();
         Integer porc;
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            porc =  (Integer) modelo.getValueAt(i, 1);
+            porc = (Integer) modelo.getValueAt(i, 1);
             if (porc > 0) {
                 componentes.put(modelo.getValueAt(i, 0).toString(), modelo.getValueAt(i, 1).toString());
             } else {
@@ -3327,6 +3387,175 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField1KeyReleased
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        // Valida la impresion antes de procesarla
+        TableModel modelo = this.jTable1.getModel();
+        boolean valido = true;
+        String codigo = modelo.getValueAt(0, 0).toString();
+        if (codigo.equals("")) {
+            valido = false;
+        }
+        String descripcion = modelo.getValueAt(0, 1).toString();
+        for (int i = 1; i < modelo.getRowCount(); i++) {
+            if (!codigo.equals(modelo.getValueAt(i, 0).toString())) {
+                valido = false;
+                break;
+            }
+        }
+        if (!valido) {
+            JOptionPane.showConfirmDialog(null, "Debe seleccionar un producto", "Advertencia", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        // Levanta los datos del modelo
+        List<String> refTalles = this.caracteristicas.getCaracteristica("talles");
+        List<String> tallesList = new ArrayList<String>();
+
+        List<String> tallList = new ArrayList<String>();
+        List<String> coloList = new ArrayList<String>();
+
+        Hashtable<String, String> stock = new Hashtable<String, String>();
+        String separador = ";";
+        String c, t, s, key;
+        int bar;
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            // TODO columnas 3, 4 y 6 talles, colores y stock
+            c = modelo.getValueAt(i, 4).toString();
+            t = modelo.getValueAt(i, 3).toString();
+            key = c + separador + t;
+            if (stock.containsKey(key)) {
+                bar = Integer.parseInt(stock.get(key));
+                bar += Integer.parseInt(modelo.getValueAt(i, 6).toString());
+                s = "" + bar;
+                stock.remove(key);
+            } else {
+                s = modelo.getValueAt(i, 6).toString();
+            }
+            stock.put(key, s);
+            // Actualiza los colores y talles que tienen stock
+            if (!coloList.contains(c) && !c.equals("*")) {
+                coloList.add(c);
+            }
+            if (!tallList.contains(t) && !t.equals("*")) {
+                tallList.add(t);
+            }
+        }
+        // Agrega el intervalo de talles adecuados
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int iaz;
+        for(String saz: tallList){
+            iaz = refTalles.indexOf(saz);
+            if(iaz > max){
+                max = iaz;
+            }
+            if(iaz < min){
+                min = iaz;
+            }
+        }
+        for (int i = min; i <= max; i++) {
+            tallesList.add(refTalles.get(i));
+        }
+
+        String f = "C:\\temp\\imprimir.pdf";
+        try {
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, new FileOutputStream(f));
+            document.open();
+            document.addTitle("Inventario");
+            Paragraph preface = new Paragraph();
+            Paragraph aux = new Paragraph("Rossi Sport", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_CENTER);
+            preface.add(aux);
+            preface.add(new Paragraph(" "));
+            Date now = Calendar.getInstance().getTime();
+            String sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss").format(now);
+            aux = new Paragraph("Fecha: " + sdf, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_RIGHT);
+            preface.add(aux);
+            //preface.add(new Paragraph(" "));
+            aux = new Paragraph("Producto: " + codigo, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_LEFT);
+            preface.add(aux);
+            //preface.add(new Paragraph(" "));
+            aux = new Paragraph("Descripción: " + descripcion, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
+            aux.setAlignment(Element.ALIGN_LEFT);
+            preface.add(aux);
+            preface.add(new Paragraph(" "));
+
+            // TODO
+            // Falta realizar la logica de procesamiento de talles
+            String[] talles = new String[tallesList.size()];
+            for (int i = 0; i < tallesList.size(); i++) {
+                talles[i] = tallesList.get(i);
+            }
+            String[] colores = new String[coloList.size()];
+            for (int i = 0; i < coloList.size(); i++) {
+                colores[i] = coloList.get(i);
+            }
+            // Creamos la tabla
+            PdfPTable table = new PdfPTable(talles.length + 1);
+            // Cargamos los headers de las columnas y sus anchos
+            PdfPCell c1;
+            String[] headers = new String[talles.length + 1];
+            headers[0] = "";
+            System.arraycopy(talles, 0, headers, 1, talles.length);
+            int idx = 0;
+            float[] anchos = new float[talles.length + 1];
+            for (String header : headers) {
+                c1 = new PdfPCell(new Phrase(header));
+                c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(c1);
+                anchos[idx] = 1.0f;
+                idx++;
+            }
+            anchos[0] = 2.0f;
+            table.setWidths(anchos);
+            // Carga el contenido de la tabla
+            for (String color : colores) {
+                c1 = new PdfPCell(new Phrase(color));
+                c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(c1);
+                for (String talle : talles) {
+                    // TODO ponerle onda a la carga de la tabla
+                    c1 = new PdfPCell(new Phrase(stock.get(color + separador + talle)));
+                    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(c1);
+                }
+            }
+            table.setHeaderRows(1);
+
+            /*
+             int j;
+             for (int i = 0; i < t.getRowCount(); i++) {
+             j = this.jTable1.convertRowIndexToModel(i);
+             table.addCell((String) t.getValueAt(j, 0));
+             table.addCell((String) t.getValueAt(j, 1));
+             table.addCell((String) t.getValueAt(j, 2));
+             table.addCell((String) t.getValueAt(j, 3));
+             }
+             */
+            preface.add(table);
+
+            document.add(preface);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (desktop.isSupported(Desktop.Action.PRINT)) {
+            try {
+                File archivo_pdf = new File(f);
+                desktop.print(archivo_pdf);
+            } catch (Exception e1) {
+                System.out.print("El sistema no permite imprimir usando la clase Desktop");
+                e1.printStackTrace();
+            }
+        } else {
+            System.out.print("El sistema no permite imprimir usando la clase Desktop");
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3382,6 +3611,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton8;
     private javax.swing.JCheckBox jCheckBox1;
@@ -3623,6 +3853,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private presentacion.ListadoProductos listadoProductos;
     private presentacion.MoverStock moverStock1;
     private presentacion.MoverStockProducto moverStockProducto1;
     private presentacion.PrototipoIngresoMasivoEImpresion prototipoIngresoMasivoEImpresion1;
