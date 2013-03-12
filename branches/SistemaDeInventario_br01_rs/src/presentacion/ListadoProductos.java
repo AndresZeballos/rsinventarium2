@@ -15,24 +15,12 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -227,39 +215,6 @@ public class ListadoProductos extends javax.swing.JPanel {
         } else {
             System.out.print("El sistema no permite imprimir usando la clase Desktop");
         }
-
-
-
-
-        /*
-         FileInputStream inputStream = null;
-         try {
-         inputStream = new FileInputStream(f);
-         } catch (FileNotFoundException e) {
-         JOptionPane.showConfirmDialog(null, "Ocurrió un problema", "Error al leer el pdf", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
-         }
-         if (inputStream == null) {
-         return;
-         }
-         DocFlavor docFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
-         Doc document = new SimpleDoc(inputStream, docFormat, null);
-         PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
-         PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
-         if (defaultPrintService != null) {
-         DocPrintJob printJob = defaultPrintService.createPrintJob();
-         try {
-         printJob.print(document, attributeSet);
-         } catch (Exception e) {
-         JOptionPane.showConfirmDialog(null, "Ocurrió un problema", "Error al imprimir pdf", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
-         }
-         } else {
-         System.err.println("No existen impresoras instaladas");
-         }
-         try {
-         inputStream.close();
-         } catch (IOException ex) {
-         System.err.println("Error al cerrar el pdf.");
-         }*/
     }//GEN-LAST:event_jButton5ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton5;

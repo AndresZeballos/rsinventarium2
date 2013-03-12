@@ -5,10 +5,7 @@
 package presentacion;
 
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
-import logica.ControladorCaracteristicas;
 import logica.ControladorCostos;
 import logica.ControladorPrecios;
 
@@ -16,18 +13,13 @@ import logica.ControladorPrecios;
  *
  * @author Andres
  */
-public class PrototipoPrecioCostos extends javax.swing.JPanel {
+public class PrototipoPrecioCostos extends AZPanel {
 
-    private ControladorCaracteristicas caracteristicas;
     private ControladorCostos costos;
     private ControladorPrecios precios;
 
-    public ControladorCaracteristicas getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
+    @Override
+    protected void cargarCaracteristicas() {
         cargarCombo("descripciones", this.jComboBox35);
     }
 
@@ -52,23 +44,6 @@ public class PrototipoPrecioCostos extends javax.swing.JPanel {
      */
     public PrototipoPrecioCostos() {
         initComponents();
-    }
-
-    private void cargarCombo(String tabla, JComboBox comboBox) {
-        String selected = null;
-        if (comboBox.getSelectedItem() != null) {
-            selected = comboBox.getSelectedItem().toString();
-        }
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-        List<String> l = this.caracteristicas.getCaracteristica(tabla);
-        for (String m : l) {
-            model.addElement(m);
-        }
-        comboBox.setModel(model);
-        if (selected != null) {
-            comboBox.setSelectedItem(selected);
-        }
     }
     
     private void cargarTabla(String codigo){

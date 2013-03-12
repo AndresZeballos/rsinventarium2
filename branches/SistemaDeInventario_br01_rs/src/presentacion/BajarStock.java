@@ -5,37 +5,25 @@
 package presentacion;
 
 import java.awt.event.ItemEvent;
-import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import logica.ControladorArticulos;
-import logica.ControladorCaracteristicas;
+import logica.ControladorConfiguracion;
 import logica.ControladorPrecios;
 
 /**
  *
  * @author Andres
  */
-public class BajarStock extends javax.swing.JPanel {
+public class BajarStock extends AZPanel {
 
-    private ControladorCaracteristicas caracteristicas;
     private ControladorArticulos articulos;
     private ControladorPrecios precios;
     private String local;
-
-    public ControladorCaracteristicas getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
-
+    
+    @Override
+    protected void cargarCaracteristicas() {
         cargarCombo("descripciones", this.jComboBox1);
         cargarCombo("talles", this.jComboBox2);
         cargarCombo("colores", this.jComboBox3);
@@ -64,36 +52,8 @@ public class BajarStock extends javax.swing.JPanel {
      */
     public BajarStock() {
         initComponents();
-        String l;
-        try {
-            Properties props = new Properties();
-            props.load(new FileInputStream("C:\\Sistema de RossiSport\\params.ini"));
-            l = props.getProperty("local");
-        } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, "Ocurrió un problema", "Error al leer la configuración", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        String l = ControladorConfiguracion.leerDato("local");
         this.local = l;
-    }
-
-    /**
-     * Carga el combo indicado con los datos de la tabla.
-     */
-    private void cargarCombo(String tabla, JComboBox comboBox) {
-        String selected = null;
-        if (comboBox.getSelectedItem() != null) {
-            selected = comboBox.getSelectedItem().toString();
-        }
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-        List<String> l = this.caracteristicas.getCaracteristica(tabla);
-        for (String m : l) {
-            model.addElement(m);
-        }
-        comboBox.setModel(model);
-        if (selected != null) {
-            comboBox.setSelectedItem(selected);
-        }
     }
 
     private void cargarTabla() {
@@ -308,8 +268,8 @@ public class BajarStock extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jButton6)))
                 .addContainerGap(145, Short.MAX_VALUE))
         );

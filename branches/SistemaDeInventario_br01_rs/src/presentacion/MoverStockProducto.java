@@ -5,32 +5,21 @@
 package presentacion;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import logica.ControladorArticulos;
-import logica.ControladorCaracteristicas;
 
 /**
  *
  * @author Andres
  */
-public class MoverStockProducto extends javax.swing.JPanel {
+public class MoverStockProducto extends AZPanel {
 
-    private ControladorCaracteristicas caracteristicas;
     private ControladorArticulos articulos;
 
-    public ControladorCaracteristicas getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
-
+    @Override
+    protected void cargarCaracteristicas() {
         cargarCombo("locales", this.jComboBox1);
         cargarCombo("locales", this.jComboBox2);
         cargarCombo("descripciones", this.jComboBox3);
@@ -49,26 +38,6 @@ public class MoverStockProducto extends javax.swing.JPanel {
      */
     public MoverStockProducto() {
         initComponents();
-    }
-
-    /**
-     * Carga el combo indicado con los datos de la tabla.
-     */
-    private void cargarCombo(String tabla, JComboBox comboBox) {
-        String selected = null;
-        if (comboBox.getSelectedItem() != null) {
-            selected = comboBox.getSelectedItem().toString();
-        }
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-        List<String> l = this.caracteristicas.getCaracteristica(tabla);
-        for (String m : l) {
-            model.addElement(m);
-        }
-        comboBox.setModel(model);
-        if (selected != null) {
-            comboBox.setSelectedItem(selected);
-        }
     }
 
     private void cargarTabla() {
@@ -92,40 +61,11 @@ public class MoverStockProducto extends javax.swing.JPanel {
         }
 
         TableRowSorter rs = new TableRowSorter<DefaultTableModel>(model);
-
-        rs.setComparator(
-                0, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                List<String> l = caracteristicas.getCaracteristica("talles");
-                if (o1.equals("*")) {
-                    return Integer.MAX_VALUE;
-                }
-                if (o2.equals("*")) {
-                    return Integer.MIN_VALUE;
-                }
-                int io1 = l.indexOf(o1);
-                int io2 = l.indexOf(o2);
-                return io1 - io2;
-            }
-        });
-        Comparator comparador_numerico = new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int io1 = ((o1.equals("")) ? 0 : Integer.parseInt(o1));
-                int io2 = ((o2.equals("")) ? 0 : Integer.parseInt(o2));
-                return io1 - io2;
-            }
-        };
-
-        rs.setComparator(
-                2, comparador_numerico);
+        rs.setComparator(0, comparador_talles);
+        rs.setComparator(2, comparador_numerico);
         this.jTable3.setRowSorter(rs);
-
-        this.jTable3.getRowSorter()
-                .toggleSortOrder(1);
-        this.jTable3.getRowSorter()
-                .toggleSortOrder(0);
+        this.jTable3.getRowSorter().toggleSortOrder(1);
+        this.jTable3.getRowSorter().toggleSortOrder(0);
     }
 
     /**
@@ -335,7 +275,6 @@ public class MoverStockProducto extends javax.swing.JPanel {
             if (!resultado_a) {
                 this.articulos.actualizarStock(p, t, c, a, -Integer.parseInt(cant));
             }
-            //ControladorEtiquetas.limpiar(archivo);
             this.jLabel1.setText("Ocurrio un error.");
             return;
         }
@@ -359,7 +298,6 @@ public class MoverStockProducto extends javax.swing.JPanel {
             cargarTabla();
         }
     }//GEN-LAST:event_jTextField1KeyReleased
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
