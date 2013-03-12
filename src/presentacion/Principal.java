@@ -97,7 +97,7 @@ public class Principal extends javax.swing.JFrame {
      * Carga los elementos de las pantallas. Si total es verdadero, blanquea los
      * campos de texto; De lo contrario, mantiene su contenido.
      */
-    private void cargarPantallas(boolean total) {
+    public void cargarPantallas(boolean total) {
         cargarCombo("descripciones", this.jComboBox1);
         cargarCombo("talles", this.jComboBox2);
         cargarCombo("colores", this.jComboBox3);

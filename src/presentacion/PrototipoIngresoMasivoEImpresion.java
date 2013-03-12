@@ -5,12 +5,9 @@
 package presentacion;
 
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -25,9 +22,8 @@ import logica.ControladorProductos;
  *
  * @author Andres
  */
-public class PrototipoIngresoMasivoEImpresion extends JPanel {
+public class PrototipoIngresoMasivoEImpresion extends AZPanel {
 
-    private ControladorCaracteristicas caracteristicas;
     private ControladorArticulos articulos;
     private ControladorPrecios precios;
     private ControladorProductos productos;
@@ -39,8 +35,8 @@ public class PrototipoIngresoMasivoEImpresion extends JPanel {
         initComponents();
     }
 
-    public void setCaracteristicas(ControladorCaracteristicas c) {
-        this.caracteristicas = c;
+    @Override
+    protected void cargarCaracteristicas() {
         agregarCombosALineasFactura(this.jTable3);
     }
 
@@ -86,33 +82,11 @@ public class PrototipoIngresoMasivoEImpresion extends JPanel {
         cargarCombo("locales", combo);
         col = a.getColumnModel().getColumn(3);
         col.setCellEditor(new DefaultCellEditor(combo));
-
-
     }
 
-    /**
-     * Carga el combo indicado con los datos de la tabla.
-     */
-    private void cargarCombo(String tabla, JComboBox comboBox) {
-        String selected = null;
-        if (comboBox.getSelectedItem() != null) {
-            selected = comboBox.getSelectedItem().toString();
-        }
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-        List<String> l = this.caracteristicas.getCaracteristica(tabla);
-        for (String m : l) {
-            model.addElement(m);
-        }
-        comboBox.setModel(model);
-        if (selected != null) {
-            comboBox.setSelectedItem(selected);
-        }
-    }
-    
-    private void cargarPrecio(){
+    private void cargarPrecio() {
         int row = this.jTable3.getSelectedRow();
-        if(row == -1){
+        if (row == -1) {
             return;
         }
         String codigo = this.jTable3.getModel().getValueAt(row, 0).toString();
@@ -275,7 +249,7 @@ public class PrototipoIngresoMasivoEImpresion extends JPanel {
             prec = tabla.getValueAt(i, 5).toString();
             c_precio = tabla.getValueAt(i, 6).toString();
             if (!p.equals("") && !t.equals("") && !c.equals("") && !l.equals("") && !cant.equals("0")) {
-                if(Integer.parseInt(cant) < 0){
+                if (Integer.parseInt(cant) < 0) {
                     this.jLabel1.setText("Hay valores negativos en la linea " + (i + 1) + ".");
                     return;
                 }
@@ -324,7 +298,6 @@ public class PrototipoIngresoMasivoEImpresion extends JPanel {
         }
         this.jLabel1.setText("Opercación exitosa");
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;

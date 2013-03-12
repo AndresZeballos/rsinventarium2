@@ -5,9 +5,7 @@
 package presentacion;
 
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -20,20 +18,14 @@ import logica.ControladorCaracteristicas;
  *
  * @author Andres
  */
-public class MoverStock extends javax.swing.JPanel {
+public class MoverStock extends AZPanel {
 
     private ControladorCaracteristicas caracteristicas;
     private ControladorArticulos articulos;
-
-    public ControladorCaracteristicas getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
-        this.caracteristicas = caracteristicas;
-        
-        agregarCombosALineasFactura(this.jTable3);
-        
+    
+    @Override
+    protected void cargarCaracteristicas() {
+        agregarCombosALineasFactura(this.jTable3);        
         cargarCombo("locales", this.jComboBox1);
         cargarCombo("locales", this.jComboBox2);
     }
@@ -68,26 +60,6 @@ public class MoverStock extends javax.swing.JPanel {
         cargarCombo("colores", combo);
         col = a.getColumnModel().getColumn(2);
         col.setCellEditor(new DefaultCellEditor(combo));
-    }
-
-    /**
-     * Carga el combo indicado con los datos de la tabla.
-     */
-    private void cargarCombo(String tabla, JComboBox comboBox) {
-        String selected = null;
-        if (comboBox.getSelectedItem() != null) {
-            selected = comboBox.getSelectedItem().toString();
-        }
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-        List<String> l = this.caracteristicas.getCaracteristica(tabla);
-        for (String m : l) {
-            model.addElement(m);
-        }
-        comboBox.setModel(model);
-        if (selected != null) {
-            comboBox.setSelectedItem(selected);
-        }
     }
 
     /**

@@ -1,21 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-  <session-factory>
-    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/rossisport</property>
-    <property name="hibernate.connection.username">usuario</property>
-    <property name="hibernate.connection.password">data</property>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/rossisport</property>
+        <property name="hibernate.connection.username">usuario</property>
+        <property name="hibernate.connection.password">data</property>
     
-    <!-- Echo all executed SQL to stdout -->
-    <property name="show_sql">true</property>
-
-    <mapping class="persistencia.Meses" />
-    <mapping class="persistencia.Grupos" />
-    <mapping class="persistencia.Usuarios" />
-    <mapping class="persistencia.Permisos" />
-    <mapping class="persistencia.GrupoPermiso" />
-    <mapping class="persistencia.Logs" />
-  </session-factory>
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        
+        <mapping class="persistencia.Articulos" />
+        <mapping class="persistencia.ArticulosPK" />
+        <mapping class="persistencia.Categorias" />
+        <mapping class="persistencia.Colores" />
+        <mapping class="persistencia.Componentes" />
+        <mapping class="persistencia.Composiciones" />
+        <mapping class="persistencia.ComposicionesPK" />
+        <mapping class="persistencia.Contactos" />
+        <mapping class="persistencia.Costos" />
+        <mapping class="persistencia.CostosPK" />
+        <mapping class="persistencia.Descripciones" />
+        <mapping class="persistencia.Facturas" />
+        <mapping class="persistencia.GrupoPermiso" />
+        <mapping class="persistencia.GrupoPermisoPK" />
+        <mapping class="persistencia.Grupos" />
+        <mapping class="persistencia.LineaFactura" />
+        <mapping class="persistencia.LineaFacturaPK" />
+        <mapping class="persistencia.Locales" />
+        <mapping class="persistencia.Logs" />
+        <mapping class="persistencia.LogsPK" />
+        <mapping class="persistencia.Marcas" />
+        <mapping class="persistencia.Meses" />
+        <mapping class="persistencia.Modulos" />
+        <mapping class="persistencia.Monedas" />
+        <mapping class="persistencia.Paises" />
+        <mapping class="persistencia.Permisos" />
+        <mapping class="persistencia.PlazoPagos" />
+        <mapping class="persistencia.Precios" />
+        <mapping class="persistencia.PreciosPK" />
+        <mapping class="persistencia.Proveedores" />
+        <mapping class="persistencia.Talles" />
+        <mapping class="persistencia.TipoPagos" />
+        <mapping class="persistencia.Usuarios" />
+    </session-factory>
 </hibernate-configuration>
