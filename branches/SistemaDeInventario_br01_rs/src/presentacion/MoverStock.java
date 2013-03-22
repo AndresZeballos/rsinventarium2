@@ -211,7 +211,11 @@ public class MoverStock extends AZPanel {
             p = tabla.getValueAt(i, 0).toString();
             t = tabla.getValueAt(i, 1).toString();
             c = tabla.getValueAt(i, 2).toString();
-            cant = tabla.getValueAt(i, 3).toString();
+            if(tabla.getValueAt(i, 3) != null){
+                cant = tabla.getValueAt(i, 3).toString();
+            } else {
+                cant = "0";
+            }
             if (!p.equals("") && !t.equals("") && !c.equals("") && !cant.equals("0")) {
                 lineas.add(new String[]{p, t, c, cant});
             } else {
