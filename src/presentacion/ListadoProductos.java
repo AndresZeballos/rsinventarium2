@@ -42,7 +42,7 @@ public class ListadoProductos extends javax.swing.JPanel {
 
     public void setCaracteristicas(ControladorCaracteristicas caracteristicas) {
         this.caracteristicas = caracteristicas;
-        if (this.productos != null) {
+        if (this.caracteristicas != null && this.productos != null) {
             cargarTabla();
         }
     }
@@ -53,7 +53,7 @@ public class ListadoProductos extends javax.swing.JPanel {
 
     public void setProductos(ControladorProductos productos) {
         this.productos = productos;
-        if (this.caracteristicas != null) {
+        if (this.caracteristicas != null && this.productos != null) {
             cargarTabla();
         }
     }
@@ -67,6 +67,9 @@ public class ListadoProductos extends javax.swing.JPanel {
 
     private void cargarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) this.jTable1.getModel();
+        while (modelo.getRowCount() != 0) {
+            modelo.removeRow(0);
+        }
         List<String> codigos = this.caracteristicas.getCaracteristica("descripciones");
         String marca, categoria, descripcion;
         for (String codigo : codigos) {

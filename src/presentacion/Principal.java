@@ -191,6 +191,9 @@ public class Principal extends javax.swing.JFrame {
         this.bajarStock1.setCaracteristicas(caracteristicas);
         this.bajarStock1.setPrecios(precios);
 
+        // Setearlos a null primero para que no dispare las consultas
+        this.listadoProductos.setCaracteristicas(null);
+        this.listadoProductos.setProductos(null);
         this.listadoProductos.setCaracteristicas(caracteristicas);
         this.listadoProductos.setProductos(productos);
 
@@ -222,9 +225,10 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Carga los list y textarea indicados con los datos de la tabla.
      */
-    private void cargarComposicion(String tabla, JTable jtable /*, JList list, JTextArea area*/, boolean borrar_text) {
+    private void cargarComposicion(String tabla, JTable jtable, boolean borrar_text) {
         List<String> l = this.caracteristicas.getCaracteristica(tabla);
         DefaultTableModel modelo = (DefaultTableModel) jtable.getModel();
+        Hashtable<String, Integer> porc = new Hashtable<String, Integer>();
         if (borrar_text) {
             while (modelo.getRowCount() != 0) {
                 modelo.removeRow(0);
@@ -233,23 +237,18 @@ public class Principal extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{comp, new Integer(0)});
             }
         } else {
-            if (l.size() != modelo.getRowCount()) {
-                modelo.addRow(new Object[]{l.get(l.size() - 1), new Integer(0)});
+            while (modelo.getRowCount() != 0) {
+                porc.put((String) modelo.getValueAt(0, 0), (Integer) modelo.getValueAt(0, 1));
+                modelo.removeRow(0);
+            }
+            for (String comp : l) {
+                if (porc.containsKey(comp)) {
+                    modelo.addRow(new Object[]{comp, porc.get(comp)});
+                } else {
+                    modelo.addRow(new Object[]{comp, new Integer(0)});
+                }
             }
         }
-        /*
-         DefaultListModel model = new DefaultListModel();
-         if (borrar_text) {
-         area.setText("");
-         }
-         for (String m : l) {
-         model.addElement(m);
-         if (borrar_text) {
-         area.setText(area.getText() + "0\n");
-         }
-         }
-         list.setModel(model);
-         */
     }
 
     /**
@@ -333,6 +332,8 @@ public class Principal extends javax.swing.JFrame {
         cargarCombo("colores", combo);
         col = a.getColumnModel().getColumn(3);
         col.setCellEditor(new DefaultCellEditor(combo));
+
+
     }
 
     private void borrarContactos(JTable tabla) {
@@ -2635,7 +2636,6 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void ConsultarStock_ConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConsultarStock_ConsultarActionPerformed
         DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
                 this.articulos.consultar(this.jTextField1.getText(),
@@ -2664,6 +2664,7 @@ public class Principal extends javax.swing.JFrame {
                 return canEdit[columnIndex];
             }
         };
+
         this.jTable1.setModel(modelo);
         TableRowSorter rs = new TableRowSorter<DefaultTableModel>(modelo);
         Comparator comparador_asterisco = new Comparator<String>() {
@@ -2692,10 +2693,15 @@ public class Principal extends javax.swing.JFrame {
                 return io1 - io2;
             }
         };
-        rs.setComparator(0, comparador_asterisco);
-        rs.setComparator(1, comparador_asterisco);
-        rs.setComparator(2, comparador_numerico);
-        rs.setComparator(3, new Comparator<String>() {
+
+        rs.setComparator(
+                0, comparador_asterisco);
+        rs.setComparator(
+                1, comparador_asterisco);
+        rs.setComparator(
+                2, comparador_numerico);
+        rs.setComparator(
+                3, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 List<String> l = caracteristicas.getCaracteristica("talles");
@@ -2710,18 +2716,28 @@ public class Principal extends javax.swing.JFrame {
                 return io1 - io2;
             }
         });
-        rs.setComparator(4, comparador_asterisco);
-        rs.setComparator(5, comparador_asterisco);
-        rs.setComparator(6, comparador_numerico);
+        rs.setComparator(
+                4, comparador_asterisco);
+        rs.setComparator(
+                5, comparador_asterisco);
+        rs.setComparator(
+                6, comparador_numerico);
         this.jTable1.setRowSorter(rs);
-        this.jTable1.getRowSorter().toggleSortOrder(3);
-        this.jTable1.getRowSorter().toggleSortOrder(0);
+
+        this.jTable1.getRowSorter()
+                .toggleSortOrder(3);
+        this.jTable1.getRowSorter()
+                .toggleSortOrder(0);
         this.jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int i = 0; i < modelo.getColumnCount(); i++) {
+        for (int i = 0;
+                i < modelo.getColumnCount();
+                i++) {
             TableColumn column = this.jTable1.getColumnModel().getColumn(i);
             column.setPreferredWidth(95);
         }
-        this.jTable1.getColumnModel().getColumn(1).setPreferredWidth(348);
+
+        this.jTable1.getColumnModel()
+                .getColumn(1).setPreferredWidth(348);
 
         // Modificacion para que aparesca una linea negra entre cuando
         // se cambia a otro producto en la tabla de la consulta de stock
@@ -2832,6 +2848,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jFileChooser2ActionPerformed
 
     private void CrearProducto_CrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearProducto_CrearActionPerformed
+        this.jLabel35.setText("");
         this.jLabel36.setText("");
         String codigo = this.jTextField4.getText();
         if (codigo.equals("")) {
@@ -2862,11 +2879,13 @@ public class Principal extends javax.swing.JFrame {
         Integer porc;
         for (int i = 0; i < modelo.getRowCount(); i++) {
             porc = (Integer) modelo.getValueAt(i, 1);
-            if (porc > 0) {
+            if (porc != null && porc > 0) {
                 componentes.put(modelo.getValueAt(i, 0).toString(), modelo.getValueAt(i, 1).toString());
             } else {
-                this.jLabel35.setText("Los porcentajes \nno son positivos");
-                return;
+                if (porc != null && porc < 0) {
+                    this.jLabel35.setText("Los porcentajes no son positivos");
+                    return;
+                }
             }
         }
         // Modificación para etiquetas
@@ -2902,6 +2921,8 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_CrearProducto_CrearActionPerformed
 
     private void ModificarProducto_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarProducto_ModificarActionPerformed
+        this.jLabel39.setText("");
+        this.jLabel43.setText("");
         String codigo = this.jTextField8.getText();
         if (!this.caracteristicas.existeElementoCaracteristica(codigo, "descripciones")) {
             this.jLabel39.setText("Esta ingresando un codigo incorrecto");
@@ -2922,11 +2943,13 @@ public class Principal extends javax.swing.JFrame {
         Integer porc;
         for (int i = 0; i < modelo.getRowCount(); i++) {
             porc = (Integer) modelo.getValueAt(i, 1);
-            if (porc > 0) {
+            if (porc != null && porc >= 0) {
                 componentes.put(modelo.getValueAt(i, 0).toString(), modelo.getValueAt(i, 1).toString());
             } else {
-                this.jLabel35.setText("Los porcentajes \nno son positivos");
-                return;
+                if (porc != null && porc < 0) {
+                    this.jLabel35.setText("Los porcentajes no son positivos");
+                    return;
+                }
             }
         }
         // Modificación para etiquetas
@@ -3233,6 +3256,9 @@ public class Principal extends javax.swing.JFrame {
 
     private void proveedor_Facturas_verFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedor_Facturas_verFacturaActionPerformed
         int fila = this.jTable7.getSelectedRow();
+        if (fila == -1) {
+            fila = 0;
+        }
         int nfactura = Integer.parseInt(this.jTable7.getModel().getValueAt(fila, 0).toString());
 
         String[] datos = this.facturas.cargarFactura(nfactura);
@@ -3444,12 +3470,12 @@ public class Principal extends javax.swing.JFrame {
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
         int iaz;
-        for(String saz: tallList){
+        for (String saz : tallList) {
             iaz = refTalles.indexOf(saz);
-            if(iaz > max){
+            if (iaz > max) {
                 max = iaz;
             }
-            if(iaz < min){
+            if (iaz < min) {
                 min = iaz;
             }
         }
