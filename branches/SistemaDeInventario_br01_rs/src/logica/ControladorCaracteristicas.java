@@ -140,7 +140,7 @@ public class ControladorCaracteristicas {
         if (!this.existeElementoCaracteristica(fecha, "meses")) {
             // De no existir, termina la inicialización en error
             this.ok = false;
-            JOptionPane.showConfirmDialog(null, "No se ha cumplido con el calendario de pagos.", "Excepción", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Problema de conectividad (2)", "Error", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             this.caracteristicas = new Hashtable<String, List>();
         }
     }
