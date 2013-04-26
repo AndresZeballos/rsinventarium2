@@ -21,7 +21,7 @@ public class BajarStock extends AZPanel {
     private ControladorArticulos articulos;
     private ControladorPrecios precios;
     private String local;
-    
+
     @Override
     protected void cargarCaracteristicas() {
         cargarCombo("descripciones", this.jComboBox1);
@@ -149,9 +149,16 @@ public class BajarStock extends AZPanel {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane7.setViewportView(jTable3);
@@ -284,9 +291,16 @@ public class BajarStock extends AZPanel {
             Class[] types = new Class[]{
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean[]{
+                true, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
             }
         });
         this.jLabel5.setText("");
